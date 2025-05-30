@@ -19,7 +19,7 @@ import {
 
 // Mock data and API functions (replace with actual API calls)
 const mockAuth = {
-  user: { id: '1', name: 'Admin User', role: 'admin' },
+  user: { id: '1', name: 'Admin', role: 'admin' },
   token: 'mock-token'
 };
 
@@ -50,7 +50,7 @@ const POSBackOffice = () => {
 
   // Dashboard Stats
   const dashboardStats = {
-    totalSales: 15420.50,
+    totalSales: 15420,
     totalOrders: 342,
     totalProducts: 156,
     lowStockItems: 8
@@ -59,7 +59,7 @@ const POSBackOffice = () => {
   const Sidebar = () => (
     <div className="w-64 bg-gray-900 text-white h-screen fixed left-0 top-0 overflow-y-auto">
       <div className="p-4 border-b border-gray-700">
-        <h1 className="text-xl font-bold">POS Back Office</h1>
+        <h1 className="text-xl font-bold">Back Office</h1>
         <p className="text-sm text-gray-400">{mockAuth.user.name}</p>
       </div>
       
@@ -233,7 +233,7 @@ const StatsCard = ({ title, value, icon: Icon, color = 'blue' }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatsCard 
             title="Total Sales" 
-            value={`$${dashboardStats.totalSales.toLocaleString()}`}
+            value={dashboardStats.totalSales.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
             icon={TrendingUp}
             color="green"
           />
@@ -354,7 +354,7 @@ const StatsCard = ({ title, value, icon: Icon, color = 'blue' }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
-            <input type="text" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
+            <input type="string" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
