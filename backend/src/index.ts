@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { pool } from './db'; // Pastikan 'pool' diekspor dari './db'
 import authRoutes from './routes/auth.routes';
+import categoryRoutes from './routes/category.routes';
 
 // Muat variabel lingkungan dari file .env
 dotenv.config();
@@ -39,6 +40,7 @@ app.get('/', (req, res) => {
 // Rute API
 // Menggunakan rute otentikasi yang diimpor dari './routes/auth.routes'
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Rute kesehatan API (untuk memverifikasi server berjalan)
 app.get('/api/health', (req, res) => {

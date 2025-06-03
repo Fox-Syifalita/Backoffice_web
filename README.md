@@ -46,3 +46,4 @@ This project is part of Punokawan POS, Dashboard, and Back Office web and mobile
 1. Monthly/Weekly/Daily/Custom report
 2. Supplier, kategori, item report (with detailing and edit)
 3. chart
+

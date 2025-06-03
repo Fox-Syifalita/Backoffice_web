@@ -1,7 +1,12 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import { Login } from './pages/Login';
 import POSBackOffice from './pages/POSBackOffice';
 
 function App() {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const token = localStorage.getItem
+  })
   return (
     <div className="min-h-screen">
       <POSBackOffice />
