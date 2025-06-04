@@ -1,10 +1,13 @@
+import 'module-alias/register';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
-import { pool } from './db'; // Pastikan 'pool' diekspor dari './db'
+import { pool } from './db'; 
 import authRoutes from './routes/auth.routes';
 import categoryRoutes from './routes/category.routes';
+
+
 
 // Muat variabel lingkungan dari file .env
 dotenv.config();
@@ -13,17 +16,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-// Mengizinkan permintaan lintas domain (CORS)
-app.use(cors());
-// Menambahkan lapisan keamanan dengan mengatur header HTTP
-app.use(helmet());
-// Parsing body permintaan dalam format JSON
-app.use(express.json());
-// Parsing body permintaan dalam format URL-encoded (untuk form data)
-app.use(express.urlencoded({ extended: true }));
+app.use(cors()); // Mengizinkan permintaan lintas domain (CORS)
+app.use(helmet()); // Menambahkan lapisan keamanan dengan mengatur header HTTP
+app.use(express.json()); // Parsing body permintaan dalam format JSON
+app.use(express.urlencoded({ extended: true })); // Parsing body permintaan dalam format URL-encoded (untuk form data)
 
-// --- PERBAIKAN: Menambahkan rute untuk path root '/' ---
-// Ketika browser mengakses http://localhost:3000, dia akan menampilkan pesan ini.
+// Menambahkan rute untuk path root '/' ---
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to the Backend API for My POS App!',
@@ -35,7 +33,11 @@ app.get('/', (req, res) => {
     }
   });
 });
-// --- AKHIR PERBAIKAN ---
+
+//404  fallback
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
 
 // Rute API
 // Menggunakan rute otentikasi yang diimpor dari './routes/auth.routes'
@@ -53,3 +55,7 @@ app.listen(PORT, () => {
   console.log(`Access health check at: http://localhost:${PORT}/api/health`);
   console.log(`Access root (welcome message) at: http://localhost:${PORT}/`);
 });
+
+pool.query('SELECT NOW()')
+  .then(res => console.log('DB connected at:', res.rows[0].now))
+  .catch(err => console.error('DB connection error:', err));
