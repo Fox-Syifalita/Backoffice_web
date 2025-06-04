@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { pool } from './db'; 
 import authRoutes from './routes/auth.routes';
 import categoryRoutes from './routes/category.routes';
+import productRoutes from './routes/product.routes';
 
 
 
@@ -43,6 +44,7 @@ app.use((req, res) => {
 // Menggunakan rute otentikasi yang diimpor dari './routes/auth.routes'
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
 
 // Rute kesehatan API (untuk memverifikasi server berjalan)
 app.get('/api/health', (req, res) => {

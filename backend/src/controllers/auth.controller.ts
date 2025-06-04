@@ -11,6 +11,9 @@ export const login = async (req: Request, res: Response) => {
 
     const user = result.rows[0];
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password are required' });
+    }
     if (!isValidPassword) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = jwt.sign(
@@ -21,9 +24,6 @@ export const login = async (req: Request, res: Response) => {
       user: { 
         id: user.id, 
         username: user.username, 
-        email: user.email, 
-        first_name: user.first_name, 
-        last_name: user.last_name, 
         role: user.role 
       } 
     });

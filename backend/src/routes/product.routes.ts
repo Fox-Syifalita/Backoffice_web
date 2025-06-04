@@ -7,7 +7,7 @@ import {
   deleteProduct
 } from '../controllers/product.controller';
 
-const router = express.Router();
+const router = Router();
 
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
