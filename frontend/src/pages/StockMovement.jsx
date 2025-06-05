@@ -26,7 +26,7 @@ const StockMovement = () => {
         <select
           className="border rounded p-2"
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={(e) => setPeriod(e.target.value)}
         >
           <option value="hourly">Hourly</option>
           <option value="daily">Daily</option>
