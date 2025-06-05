@@ -27,17 +27,35 @@ const Products = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch('/api/products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
-    });
-    const newProduct = await res.json();
-    setProducts(prev => [...prev, newProduct]);
-    setShowModal(false);
-    setForm({ name: '', sku: '', category_id: '', price: '', cost: '', stock: '' });
+  e.preventDefault();
+
+  const payload = {
+    name: form.name,
+    sku: form.sku,
+    category_id: form.category_id,
+    cost_price: parseFloat(form.cost),
+    selling_price: parseFloat(form.price),
+    stock_quantity: parseInt(form.stock),
+    is_active: true,
+    track_stock: true,
+    allow_negative_stock: false,
+    unit: 'pcs',
+    tax_rate: 0,
+    barcode: '',          
   };
+
+  const res = await fetch('/api/products', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  const newProduct = await res.json();
+  setProducts(prev => [...prev, newProduct]);
+  setShowModal(false);
+  setForm({ name: '', sku: '', category_id: '', price: '', cost: '', stock: '' });
+};
+
 
   const filtered = products.filter(p =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
