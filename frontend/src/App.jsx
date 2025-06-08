@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import POSBackOffice from './pages/POSBackOffice';
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,9 +34,25 @@ function App() {
 
   if (loading) return <div className="p-4">Loading...</div>;
 
-  return user
-    ? <POSBackOffice user={user} onLogout={() => setUser(null)} />
-    : <Login onLogin={(user) => setUser(user)} />;
+  return (
+    <Router>
+      <Routes>
+        {user ? (
+          <>
+            <Route path="/*" element={<POSBackOffice user={user} onLogout={() => setUser(null)} />} />
+            <Route path="/login" element={<Navigate to="/" />} />
+            <Route path="/register" element={<Navigate to="/" />} />
+          </>
+        ) : (
+          <>
+            <Route path="/login" element={<Login onLogin={setUser} />} />
+            <Route path="/register" element={<Register user={{ role: 'owner' }} />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </>
+        )}
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

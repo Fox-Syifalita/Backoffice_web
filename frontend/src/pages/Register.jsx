@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import logo from '../assets/logo.jpg'; 
 
-const Regster = ({ user }) => {
+const Register = ({ user }) => {
     const [form, setForm] = useState({
         username: '',
         password: '',
         email: '',
-        role: 'admin'
+        firstName: '',
+        lastName:''
     });
     const [message, setMessage] = useState('');
 
@@ -18,16 +20,15 @@ const Regster = ({ user }) => {
         e.preventDefault();
         setMessage('');
 
-        if (user.role != 'owner') {
-            setMessage('Only owner can create accounts.');
-            return;
-        }
-
         try {
             const res = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
-                body: JSON.stringify(form)
+                body: JSON.stringify({
+                    ...form,
+                    role: 'owner' 
+                })
+
             });
         } catch (err) {
             setMessage(err.message);
@@ -40,25 +41,25 @@ const Regster = ({ user }) => {
             {message && <p className="text-sm text-red-500 mb-3">{message}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block mb-1">Username</label>
-                    <input name="username" value={form.username} onChange={handleChange} required className="w-full border px-3 py-2 rounded" />
+                    <label className="block mb-1">First Name</label>
+                    <input name="firstName" value={form.firstName} on onChange={handleChange} required className="w-full border px-3 py-2 rounded"/>
                 </div>
                 <div>
-                <label className="block mb-1">Password</label>
-                <input type="password" name="password" value={form.password} onChange={handleChange} required className="w-full border px-3 py-2 rounded" />
+                    <label className="block mb-1">Last Name</label>
+                    <input name="lastName" value={form.lastName} onChange={handleChange} required className="w-full border px-3 py-2 rounded" />
+                </div>
+                <div>
+                    <label className="block mb-1">Username</label>
+                    <input name="username" value={form.username} onChange={handleChange} required className="w-full border px-3 py-2 rounded" />
                 </div>
                 <div>
                 <label className="block mb-1">Email</label>
                 <input type="email" name="email" value={form.email} onChange={handleChange} required className="w-full border px-3 py-2 rounded" />
                 </div>
                 <div>
-                <label className="block mb-1">Role</label>
-                <select name="role" value={form.role} onChange={handleChange} className="w-full border px-3 py-2 rounded">
-                    <option value="admin">Admin</option>
-                    <option value="supervisor">Supervisor</option>
-                    <option value="staff">Staff</option>
-                </select>
-            </div>
+                <label className="block mb-1">Password</label>
+                <input type="password" name="password" value={form.password} onChange={handleChange} required className="w-full border px-3 py-2 rounded" />
+                </div>
             <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Register</button>
             </form>
         </div>
