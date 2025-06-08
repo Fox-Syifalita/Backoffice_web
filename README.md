@@ -7,7 +7,7 @@ A comprehensive Point of Sale (POS) mobile application with web dashboard for ba
 **Punokawan POS App** is a modern, feature-rich point of sale solution that combines a Flutter mobile application with a web-based dashboard. Designed specifically for retail businesses, it provides complete inventory management, sales tracking, and reporting capabilities.
 
 - **Version**: v1.0.0
-- **Release Date**: May 23, 2025
+- **Release Date**: 2025
 - **Developer**: Syifalita
 - **Organization**: Punokawan Mart / Punokawan Group
 
@@ -71,51 +71,7 @@ A comprehensive Point of Sale (POS) mobile application with web dashboard for ba
    - Configure authentication settings
    - Update app configuration files
 
-4. **Run the application**
-   ```bash
-   # For mobile development
-   flutter run
-   
-   # For web dashboard
-   flutter run -d web
-   ```
-
 ## 📋 Project Structure
-
-```
-punokawan-pos-app/
-├── lib/
-│   ├── models/          # Data models
-│   ├── screens/         # UI screens
-│   ├── widgets/         # Reusable components
-│   ├── services/        # API and business logic
-│   ├── utils/           # Helper functions
-│   └── main.dart        # App entry point
-├── assets/              # Images, fonts, etc.
-├── web/                 # Web dashboard files
-├── android/             # Android-specific files
-├── ios/                 # iOS-specific files
-└── pubspec.yaml         # Dependencies
-```
-
-## 🔧 Configuration
-
-### API Configuration
-Update the API endpoints in your configuration file:
-```dart
-class ApiConfig {
-  static const String baseUrl = 'your-api-base-url';
-  static const String authEndpoint = '/auth';
-  // Add other endpoints
-}
-```
-
-### App Settings
-Customize app settings in the settings configuration:
-- Store information
-- Receipt formatting
-- Tax calculations
-- User permissions
 
 ## 📊 Reporting Features
 
@@ -167,6 +123,4 @@ For support and inquiries:
 - [ ] Customer loyalty programs
 - [ ] Integration with external payment systems
 - [ ] Mobile receipt printing
-- [ ] Offline mode capabilities
-
 ---
