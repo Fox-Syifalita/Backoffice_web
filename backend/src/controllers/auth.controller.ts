@@ -4,8 +4,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 export const login = async (req: Request, res: Response) => {
-  try {
-    const { username, password } = req.body;
+  const { username, password } = req.body;
+  
+  try { 
     const result = await pool.query('SELECT * FROM users WHERE username = $1 AND is_active = true', [username]);
     if (result.rows.length === 0) return res.status(401).json({ error: 'Invalid credentials' });
 
@@ -17,18 +18,20 @@ export const login = async (req: Request, res: Response) => {
     if (!isValidPassword) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email, role: user.role }, process.env.JWT_SECRET!, { expiresIn: '24h' }
+      { id: user.id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: '24h' }
     );
 
-    res.json({ token, 
+    res.status(200).json({ 
+      token, 
       user: { 
         id: user.id, 
         username: user.username, 
         role: user.role 
       } 
     });
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+  } catch (err) {
+    console.error('[Login Error]', err);
+    res.status(500).json({ error: 'Login Gagal' });
   }
 };
 

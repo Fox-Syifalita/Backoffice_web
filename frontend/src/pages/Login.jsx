@@ -10,22 +10,28 @@ const Login = ({onLogin}) => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form)
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Login gagal');
-            localStorage.setItem('token', data.token);
-            onLogin(data.user);
-        } catch (err) {
-            setError(err.message);
-        }
+      e.preventDefault();
+      setError('');
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+
+        const text = await res.text(); // Ambil sebagai text dulu
+        const data = text ? JSON.parse(text) : {}; // Cek apakah ada isinya
+
+        if (!res.ok) throw new Error(data.message || 'Login gagal');
+
+        localStorage.setItem('token', data.token);
+        onLogin(data.user);
+      } catch (err) {
+        setError(err.message);
+      }
     };
+
 
     return (
     <div className="flex h-screen justify-center items-center bg-gray-100">
