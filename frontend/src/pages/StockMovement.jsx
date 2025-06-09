@@ -6,14 +6,21 @@ import { Download, Filter } from 'lucide-react';
 
 const StockMovement = () => {
   const [movements, setMovements] = useState([]);
-  const [filter, setFilter] = useState('daily');
+  const [filter, setFilter] = useState('hourly');
+  const [endTime, setEndTime] = useState('');
   const [search, setSearch] = useState('');
+  const [timeValue, setTimeValue] = useState('');
+  const [dateValue, setDateValue] = useState('');
+  const [monthValue, setMonthValue] = useState('');
 
   useEffect(() => {
-    fetch(`/api/stock/movement?range=${filter}`)
-      .then(res => res.json())
-      .then(data => setMovements(data));
-  }, [filter]);
+    if (filter === 'hourly' && startTime && endTime) {
+      fetch(`/api/stok?start=${startTime}&end=${endTime}`)
+        .then(res => res.json())
+        .then(setData);
+    }
+  }, [filter, startTime, endTime]);
+
 
   const filtered = movements.filter(m =>
     m.product.toLowerCase().includes(search.toLowerCase())
@@ -28,10 +35,47 @@ const StockMovement = () => {
           value={filter}
           onChange={(e) => setPeriod(e.target.value)}
         >
-          <option value="hourly">Hourly</option>
-          <option value="daily">Daily</option>
-          <option value="monthly">Monthly</option>
+          <option value="hourly">Set Time</option>
+          <option value="daily">Set Date</option>
+          <option value="monthly">Set Month</option>
         </select>
+
+        {filter === 'hourly' &&(
+          <div className='flex gap-2 items-center'>
+          <input
+            type='time'
+            className='border rounded p-2'
+            value={timeValue}
+            onChange={(e) => setTimeValue(e.target.value)}
+          />
+          <span>-</span>
+          <input
+            type="time"
+            className="border rounded p-2"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+          />
+          </div>
+        )}
+
+        {filter === 'daily' && (
+          <input
+            type='date'
+            className='border rounded p-2'
+            value={dateValue}
+            onChange={(e) => setDateValue(e.target.value)}
+          />
+          )}
+          
+        {filter === 'monthly' && (
+          <input
+            type='month'
+            className='border rounded p-2'
+            value={monthValue}
+            onChange={(e) => setMonthValue(e.target.value)}
+          />
+        )}
+
         <button className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
           <Download className="w-4 h-4 mr-2" /> Export
         </button>
