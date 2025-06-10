@@ -10,13 +10,14 @@ import {
   LogOut,
   Truck, 
   icons,
-  Package2
+  Package2,
+  TruckIcon
 } from 'lucide-react';
 
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-  { id: 'inventory', label: 'Inventory dan Produk', icon: Package},
-  { id: 'products', label: 'Products', icon: Package },
+  { id: 'products', label: 'Inventory and Products', icon: Package },
+  { id: 'purchase', label: 'Purchase', icon: TruckIcon},
   { id: 'sales', label: 'Sales', icon: ShoppingCart },
   { id: 'customers', label: 'Customers', icon: Users },
   { id: 'supplier', label: 'Supplier', icon: Truck },

@@ -7,9 +7,9 @@ import { Plus, Trash2 } from 'lucide-react';
 
 const StockOpname = () => {
   const [opnames, setOpnames] = useState([]);
-  const [filter, setFilter] = useState('monthly');
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
+
 
   useEffect(() => {
     fetch(`/api/stock/opname?range=${filter}`)
@@ -25,14 +25,6 @@ const StockOpname = () => {
     <div>
       <Header title="Stok Opname">
         <SearchBar value={search} onChange={setSearch} />
-        <select
-          className="border rounded p-2"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="daily">Harian</option>
-          <option value="monthly">Bulanan</option>
-        </select>
         <button onClick={() => setShowModal(true)} className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
           <Plus className="w-4 h-4 mr-2" /> Tambah Opname
         </button>
