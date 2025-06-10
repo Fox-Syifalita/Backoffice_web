@@ -1,4 +1,4 @@
-import 'module-alias/register';
+// import 'module-alias/register';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -8,7 +8,6 @@ import authRoutes from './routes/auth.routes';
 import categoryRoutes from './routes/category.routes';
 import productRoutes from './routes/product.routes';
 import stockMovementRoutes from './routes/stockMovement.routes';
-
 
 // Muat variabel lingkungan dari file .env
 dotenv.config();
@@ -21,7 +20,6 @@ app.use(cors()); // Mengizinkan permintaan lintas domain (CORS)
 app.use(helmet()); // Menambahkan lapisan keamanan dengan mengatur header HTTP
 app.use(express.json()); // Parsing body permintaan dalam format JSON
 app.use(express.urlencoded({ extended: true })); // Parsing body permintaan dalam format URL-encoded (untuk form data)
-
 
 // Menambahkan rute untuk path root '/' ---
 app.get('/', (req, res) => {
@@ -36,21 +34,22 @@ app.get('/', (req, res) => {
   });
 });
 
-//404  fallback
-app.use((req, res) => {
-  res.status(404).json({ error: 'Not found' });
+// Rute kesehatan API (untuk memverifikasi server berjalan)
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', message: 'API is running' });
 });
 
-// Rute API
-// Menggunakan rute otentikasi yang diimpor dari './routes/auth.routes'
+// Rute API - PINDAHKAN KE ATAS SEBELUM 404 HANDLER
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/stockmovement', stockMovementRoutes);
 
-// Rute kesehatan API (untuk memverifikasi server berjalan)
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'API is running' });
+// 404 fallback - PINDAHKAN KE BAWAH SETELAH SEMUA ROUTES
+app.use((req, res) => {
+  res.status(404).json({
+    error: `Route not found: ${req.method} ${req.originalUrl}`
+  });
 });
 
 // Memulai server pada port yang ditentukan

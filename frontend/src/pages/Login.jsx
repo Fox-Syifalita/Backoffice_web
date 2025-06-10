@@ -14,14 +14,14 @@ const Login = ({onLogin}) => {
       setError('');
 
       try {
-        const res = await fetch('/api/auth/login', {
+        const res = await fetch('http://localhost:3000/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),
         });
 
-        const text = await res.text(); // Ambil sebagai text dulu
-        const data = text ? JSON.parse(text) : {}; // Cek apakah ada isinya
+        const text = await res.text(); 
+        const data = text ? JSON.parse(text) : {}; 
 
         if (!res.ok) throw new Error(data.message || 'Login gagal');
 
