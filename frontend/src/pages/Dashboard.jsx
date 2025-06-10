@@ -22,15 +22,26 @@ const Dashboard = ({ stats, sales, lowStock }) => {
 
     setChartData(formatted);
   }, [sales]);
-
   return (
+
     <div>
       <Header title="Dashboard" />
       <div className="px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatsCard title="Total Sales" value={stats.totalSales.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })} icon={TrendingUp} color="green" />
+          <StatsCard 
+          title="Total Sales" 
+          value={stats.totalSales.toLocaleString('id-ID', { 
+            style: 'currency', 
+            currency: 'IDR',
+            maximumFractionDigits: 0
+          })} 
+          icon={TrendingUp} 
+          color="green" />
+
           <StatsCard title="Total Orders" value={stats.totalOrders.toLocaleString()} icon={ShoppingCart} color="blue" />
+
           <StatsCard title="Products" value={stats.totalProducts.toLocaleString()} icon={Package} color="purple" />
+          
           <StatsCard title="Low Stock Items" value={stats.lowStockItems.toLocaleString()} icon={Package} color="red" />
         </div>
 
