@@ -12,6 +12,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
+      setUser(null);
       setLoading(false);
       return;
     }
@@ -28,6 +29,7 @@ function App() {
       })
       .catch(() => {
         localStorage.removeItem('token');
+        setUser(null);
         setLoading(false);
       });
   }, []);

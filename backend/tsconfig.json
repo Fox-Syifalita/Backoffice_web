@@ -2,14 +2,25 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "outDir": "dist",
-    "rootDir": "src",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "types": ["node"]
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["src", "../frontend/src/pages"]
+  "include": [
+    "src/**/*",
+    "types/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
