@@ -11,6 +11,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
     if (!token) {
       setUser(null);
       setLoading(false);
@@ -28,8 +29,14 @@ function App() {
         setLoading(false);
       })
       .catch(() => {
-        localStorage.removeItem('token');
-        setUser(null);
+
+        if (savedUser){
+          setUser(JSON.parse(savedUser));
+        } else {
+          localStorage.removeItem('token');
+          setUser(null);
+
+        }
         setLoading(false);
       });
   }, []);
@@ -41,7 +48,15 @@ function App() {
       <Routes>
         {user ? (
           <>
-            <Route path="/*" element={<POSBackOffice user={user} onLogout={() => setUser(null)} />} />
+            <Route path="/*" element={<POSBackOffice user={user} 
+            onLogout={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              setUser(null)
+            }}
+          />
+          }
+          />
             <Route path="/login" element={<Navigate to="/" />} />
             <Route path="/register" element={<Navigate to="/" />} />
           </>
