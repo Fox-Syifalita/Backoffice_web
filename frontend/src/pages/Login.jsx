@@ -26,6 +26,7 @@ const Login = ({onLogin}) => {
         if (!res.ok) throw new Error(data.message || 'Login gagal');
 
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         onLogin(data.user);
       } catch (err) {
         setError(err.message);
