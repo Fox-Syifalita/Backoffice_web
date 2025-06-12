@@ -1,5 +1,6 @@
 import React from 'react';
 import LogoutButton from '../components/LogoutButton';
+
 import {
   BarChart3,
   Package,
@@ -25,22 +26,25 @@ const menuItems = [
   { id: 'settings', label: 'Settings', icon: Settings }
 ];
 
-const Sidebar = ({ currentView, setCurrentView, user }) => {
+const Sidebar = ({ currentView, setCurrentView, user, isOpen, toggleSidebar }) => {
   return (
-    <div className="w-64 bg-gray-900 text-white h-screen fixed left-0 top-0 overflow-y-auto">
-      <div className="p-4 border-b border-gray-700">
-        <h1 className="text-xl font-bold">Back Office</h1>
-        <p className="text-sm text-gray-400">{user?.name}</p>
-      </div>
-      <nav className="mt-4">
+    <div 
+      className={`bg-gray-900 text-white h-screen fixed top-0 left-0 overflow-y-auto transition-all duration-300
+        ${isOpen ? 'w-64' : 'w-0'}`
+      }
+    >
+    <div className={`${isOpen ? 'block' : 'hidden'} p-4 border-b border-gray-700`}>
+    <h1 className="text-xl font-bold">Back Office</h1>
+    <p className="text-sm text-gray-400">{user?.name}</p>
+    </div>
+      <nav className={`${isOpen ? 'block' : 'hidden'} mt-4`}>
         {menuItems.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
-            onClick={() => setCurrentView(id)}
-            className={`w-full flex items-center px-4 py-3 text-left hover:bg-gray-800 transition-colors ${currentView === id ? 'bg-blue-600' : ''}`}
+            onClick={toggleSidebar}
+            className="text-white p-2 bg-gray-800 hover:bg-gray-700 rounded"
           >
-            <Icon className="w-5 h-5 mr-3" />
-            {label}
+            {isSidebarOpen ? <ChevronLeft /> : <ChevronRight />}
           </button>
         ))}
       

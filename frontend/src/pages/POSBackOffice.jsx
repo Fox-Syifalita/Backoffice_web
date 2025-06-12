@@ -4,8 +4,10 @@ import Dashboard from './Dashboard';
 import InventoryLayout from './InventoryLayout';
 import { mockAuth, mockProducts, mockCategories, mockSales, dashboardStats } from '../data/mock';
 
-const POSBackOffice = () => {
+const POSBackOffice = ({user, onLogout}) => {
   const [currentView, setCurrentView] = useState('dashboard');
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
   const renderContent = () => {
     switch (currentView) {
@@ -29,7 +31,12 @@ const POSBackOffice = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar currentView={currentView} setCurrentView={setCurrentView} user={mockAuth.user} />
+      <Sidebar currentView={currentView} 
+      setCurrentView={setCurrentView} 
+      user={user}
+      isOpen={isSidebarOpen} 
+      toggleSidebar={toggleSidebar}
+      />
       <div className="flex-1 ml-64 overflow-y-auto">
         {renderContent()}
       </div>
