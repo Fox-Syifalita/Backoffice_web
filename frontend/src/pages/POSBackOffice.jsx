@@ -30,14 +30,15 @@ const POSBackOffice = ({user, onLogout}) => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar currentView={currentView} 
+    <div className={`flex`}>
+      <Sidebar 
+      currentView={currentView} 
       setCurrentView={setCurrentView} 
       user={user}
-      isOpen={isSidebarOpen} 
+      isSidebarOpen={isSidebarOpen} 
       toggleSidebar={toggleSidebar}
       />
-      <div className="flex-1 ml-64 overflow-y-auto">
+      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'} p-4`}>
         {renderContent()}
       </div>
     </div>

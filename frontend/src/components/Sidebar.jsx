@@ -26,25 +26,27 @@ const menuItems = [
   { id: 'settings', label: 'Settings', icon: Settings }
 ];
 
-const Sidebar = ({ currentView, setCurrentView, user, isOpen, toggleSidebar }) => {
+const Sidebar = ({ currentView, setCurrentView, user, isSidebarOpen, toggleSidebar}) => {
   return (
     <div 
-      className={`bg-gray-900 text-white h-screen fixed top-0 left-0 overflow-y-auto transition-all duration-300
-        ${isOpen ? 'w-64' : 'w-0'}`
-      }
+      className={`fixed top-0 left-0 h-screen bg-gray-800 text-white transition-all duration-300
+      ${isSidebarOpen ? 'w-64' : 'w-0'} overflow-hidden`}
     >
-    <div className={`${isOpen ? 'block' : 'hidden'} p-4 border-b border-gray-700`}>
+     <div className="p-4 border-b border-gray-700">
     <h1 className="text-xl font-bold">Back Office</h1>
     <p className="text-sm text-gray-400">{user?.name}</p>
     </div>
-      <nav className={`${isOpen ? 'block' : 'hidden'} mt-4`}>
-        {menuItems.map(({ id, label, icon: Icon }) => (
+
+      <nav className="mt-4">
+        {menuItems.map(({ id, label }) => (
           <button
             key={id}
-            onClick={toggleSidebar}
-            className="text-white p-2 bg-gray-800 hover:bg-gray-700 rounded"
+            onClick={() => setCurrentView(id)}
+            className={`block w-full text-left px-4 py-2 hover:bg-gray-700 ${
+              currentView === id ? 'bg-gray-700' : ''
+            }`}
           >
-            {isSidebarOpen ? <ChevronLeft /> : <ChevronRight />}
+            {label}
           </button>
         ))}
       
