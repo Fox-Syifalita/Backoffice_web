@@ -4,10 +4,13 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { pool } from './db'; 
+import salesRoutes from './routes/sales.routes';
 import authRoutes from './routes/auth.routes';
 import categoryRoutes from './routes/category.routes';
 import productRoutes from './routes/product.routes';
 import stockMovementRoutes from './routes/stockMovement.routes';
+import purchaseRoutes from './routes/purchase.routes';
+import purchaseReturnRoutes from './routes/purchase_return.routes';
 
 // Muat variabel lingkungan dari file .env
 dotenv.config();
@@ -44,6 +47,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/stockmovement', stockMovementRoutes);
+app.use('/api/purchases', purchaseRoutes);
+app.use('/api/purchase-returns', purchaseReturnRoutes);
+app.use('/api/sales', salesRoutes);
 
 // 404 fallback - PINDAHKAN KE BAWAH SETELAH SEMUA ROUTES
 app.use((req, res) => {

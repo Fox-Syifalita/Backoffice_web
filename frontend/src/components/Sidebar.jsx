@@ -18,7 +18,7 @@ import {
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
   { id: 'products', label: 'Inventory and Products', icon: Package },
-  { id: 'purchase', label: 'Purchase', icon: TruckIcon},
+  { id: 'purchases', label: 'Purchase', icon: TruckIcon},
   { id: 'sales', label: 'Sales', icon: ShoppingCart },
   { id: 'customers', label: 'Customers', icon: Users },
   { id: 'supplier', label: 'Supplier', icon: Truck },

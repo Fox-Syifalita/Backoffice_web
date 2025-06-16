@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Dashboard from './Dashboard';
 import InventoryLayout from './InventoryLayout';
+import Purchases from './Purchase';
 import { mockAuth, mockProducts, mockCategories, mockSales, dashboardStats } from '../data/mock';
 
 const POSBackOffice = ({user, onLogout}) => {
@@ -24,6 +25,8 @@ const POSBackOffice = ({user, onLogout}) => {
       case 'stockOpname':
       case 'barcode':
         return <InventoryLayout selectedTab={currentView} />;
+      case 'purchases' :
+        return <Purchases />;
       default:
         return <Dashboard stats={dashboardStats} sales={mockSales} lowStock={mockProducts.filter(p => p.stock < 20)} />;
     }
