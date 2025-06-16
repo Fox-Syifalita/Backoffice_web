@@ -22,7 +22,7 @@ const Sales = () => {
   const fetchSales = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/sales');
+      const response = await fetch('http://localhost:5173/api/sales');
       const data = await response.json();
       setSales(data);
     } catch (error) {
@@ -35,7 +35,7 @@ const Sales = () => {
   // Fetch sale items for detail modal
   const fetchSaleItems = async (saleId) => {
     try {
-      const response = await fetch(`/api/sales/${saleId}/items`);
+      const response = await fetch(`http://localhost:5173/api/sales/${saleId}/items`);
       const data = await response.json();
       setSaleItems(data);
     } catch (error) {
