@@ -3,7 +3,7 @@ import {
   getAllSales,
   getSaleById
   // Tambahkan controller lain jika sudah ditambahkan
-} from '../controllers/sales.controllers';
+} from '../controllers/sales.controller';
 
 const router = express.Router();
 
