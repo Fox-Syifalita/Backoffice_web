@@ -12,7 +12,8 @@ import {
   Truck, 
   icons,
   Package2,
-  TruckIcon
+  TruckIcon,
+  User2
 } from 'lucide-react';
 
 const menuItems = [
@@ -23,6 +24,7 @@ const menuItems = [
   { id: 'customers', label: 'Customers', icon: Users },
   { id: 'supplier', label: 'Supplier', icon: Truck },
   { id: 'reports', label: 'Reports', icon: TrendingUp },
+  { id: 'employee', label: 'Employee', icon: User2},
   { id: 'settings', label: 'Settings', icon: Settings }
 ];
 

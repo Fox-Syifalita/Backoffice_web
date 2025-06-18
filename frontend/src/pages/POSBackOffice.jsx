@@ -5,9 +5,10 @@ import InventoryLayout from './InventoryLayout';
 import Purchases from './Purchase';
 import Sales from './Sales';
 import Supplier from './Supplier';
-import Report from './Reports';
-import { mockAuth, mockProducts, mockCategories, mockSales, dashboardStats } from '../data/mock';
 import Reports from './Reports';
+import { mockAuth, mockProducts, mockCategories, mockSales, dashboardStats } from '../data/mock';
+import Employees from './Employee';
+import Settings from './Setting';
 
 const POSBackOffice = ({user, onLogout}) => {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -35,8 +36,12 @@ const POSBackOffice = ({user, onLogout}) => {
         return <Sales />;
       case 'supplier' :
         return <Supplier />;
-      case 'report' :
+      case 'reports' :
         return <Reports />;
+      case 'employee' :
+        return <Employees />;
+      case 'settings' :
+        return <Settings />;
       default:
         return <Dashboard stats={dashboardStats} sales={mockSales} lowStock={mockProducts.filter(p => p.stock < 20)} />;
     }

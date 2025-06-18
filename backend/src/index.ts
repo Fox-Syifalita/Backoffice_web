@@ -13,6 +13,8 @@ import purchaseRoutes from './routes/purchase.routes';
 import purchaseReturnRoutes from './routes/purchase_return.routes';
 import supplierRoutes from './routes/supplier.routes';
 import reportRoutes from './routes/report.routes';
+import employeeRoutes from './routes/employee.routes';
+import settingRoutes from './routes/setting.routes';
 
 
 
@@ -56,6 +58,8 @@ app.use('/api/purchase-returns', purchaseReturnRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/supplier', supplierRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/employee', employeeRoutes);
+app.use('/api/setting', settingRoutes);
 
 // 404 fallback - PINDAHKAN KE BAWAH SETELAH SEMUA ROUTES
 app.use((req, res) => {
