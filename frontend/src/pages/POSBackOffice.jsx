@@ -8,6 +8,7 @@ import Supplier from './Supplier';
 import Reports from './Reports';
 import { mockAuth, mockProducts, mockCategories, mockSales, dashboardStats } from '../data/mock';
 import Employees from './Employee';
+import Products from './Products';
 import Settings from './Setting';
 
 const POSBackOffice = ({user, onLogout}) => {
@@ -26,10 +27,10 @@ const POSBackOffice = ({user, onLogout}) => {
           />
         );
       case 'products':
+        return <Products />;
       case 'stockMovement':
       case 'stockOpname':
       case 'barcode':
-        return <InventoryLayout selectedTab={currentView} />;
       case 'purchases' :
         return <Purchases />;
       case 'sales' :

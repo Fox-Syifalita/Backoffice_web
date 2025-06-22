@@ -1,6 +1,5 @@
 import React from 'react';
 import LogoutButton from '../components/LogoutButton';
-
 import {
   BarChart3,
   Package,
@@ -10,8 +9,6 @@ import {
   Settings,
   LogOut,
   Truck, 
-  icons,
-  Package2,
   TruckIcon,
   User2
 } from 'lucide-react';

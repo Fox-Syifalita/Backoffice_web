@@ -34,7 +34,7 @@ const Reports = () => {
         period: filters.period
       });
       
-      const response = await fetch(`http://localhost:5173/api/reports/${activeTab}?${queryParams}`);
+      const response = await fetch(`/api/reports/${activeTab}?${queryParams}`);
       const data = await response.json();
       setReportData(data);
     } catch (error) {

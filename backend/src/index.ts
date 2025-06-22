@@ -56,7 +56,7 @@ app.use('/api/stockmovement', stockMovementRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/purchase-returns', purchaseReturnRoutes);
 app.use('/api/sales', salesRoutes);
-app.use('/api/supplier', supplierRoutes);
+app.use('/api/suppliers', supplierRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/employee', employeeRoutes);
 app.use('/api/setting', settingRoutes);

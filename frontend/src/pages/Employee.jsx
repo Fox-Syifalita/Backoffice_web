@@ -31,7 +31,7 @@ const Employees = () => {
   }, []);
 
   const fetchEmployees = () => {
-    fetch('/api/users')
+    fetch('/api/employee')
       .then(res => res.json())
       .then(data => setEmployees(data))
       .catch(err => console.error('Error fetching employees:', err));

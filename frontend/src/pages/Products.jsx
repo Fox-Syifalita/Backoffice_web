@@ -28,7 +28,7 @@ const Products = () => {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-
+  try{
   const payload = {
     name: form.name,
     sku: form.sku,
@@ -54,6 +54,11 @@ const Products = () => {
   setProducts(prev => [...prev, newProduct]);
   setShowModal(false);
   setForm({ name: '', sku: '', category_id: '', price: '', cost: '', stock: '' });
+  setShowForm(false);
+}catch (err) {
+  console.error('Error: ', err);
+  alert('Terjadi kesalahan saat menyimpan produk')
+}
 };
 
 

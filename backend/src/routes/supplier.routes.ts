@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-  getSuppliers,
+  getAllSuppliers,
   createSupplier,
   updateSupplier,
   deleteSupplier
@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-router.get('/', getSuppliers);
+router.get('/', getAllSuppliers);
 router.post('/', createSupplier);
 router.put('/:id', updateSupplier);
 router.delete('/:id', deleteSupplier);

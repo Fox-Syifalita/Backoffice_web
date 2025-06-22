@@ -5,10 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const getAllPurchaseReturns = async (_req: Request, res: Response) => {
   try {
-    const result = await pool.query(`SELECT * FROM purchase_returns ORDER BY created_at DESC`);
+    const result = await pool.query(`
+      SELECT id, return_number, total_amount, refund_method, reason, status, return_date
+      FROM returns
+      ORDER BY return_date DESC
+    `);
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch purchase returns' });
+    console.error('getAllReturns error:', err);
+    res.status(500).json({ error: 'Failed to fetch returns' });
   }
 };
 

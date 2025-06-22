@@ -1,14 +1,21 @@
 import { Request, Response } from 'express';
 import { pool } from '../db';
 
-export const getSuppliers = async (_req: Request, res: Response) => {
+export const getAllSuppliers = async (_req: Request, res: Response) => {
   try {
-    const result = await pool.query('SELECT * FROM suppliers ORDER BY name ASC');
+    const result = await pool.query(`
+      SELECT id, name, email, phone, address
+      FROM suppliers
+      WHERE is_active = true
+      ORDER BY name ASC
+    `);
     res.json(result.rows);
-  } catch (err: any) {
-    res.status(500).json({ error: 'Gagal mengambil supplier', message: err.message });
+  } catch (err) {
+    console.error('getAllSuppliers error:', err);
+    res.status(500).json({ error: 'Failed to fetch suppliers' });
   }
 };
+
 
 export const createSupplier = async (req: Request, res: Response) => {
   const { name, contact_person, email, phone, address, tax_number, payment_terms, is_active } = req.body;

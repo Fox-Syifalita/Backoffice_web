@@ -12,113 +12,143 @@ const parseParams = (req: Request) => {
 };
 
 export const getSalesPerSKU = async (req: Request, res: Response) => {
-  const { startDate, endDate } = parseParams(req);
+  const { startDate, endDate } = req.query;
+
   try {
-    const query = `
-      SELECT p.sku, p.name as product_name, c.name as category_name,
-             SUM(s.qty) as quantity_sold,
-             SUM(s.qty * s.price) as total_sales,
-             SUM((s.price - p.cost_price) * s.qty) as profit
-      FROM sales_items s
-      JOIN products p ON s.product_id = p.id
+    const result = await pool.query(`
+      SELECT 
+        p.sku,
+        p.name AS product_name,
+        c.name AS category_name,
+        SUM(si.quantity) AS quantity_sold,
+        SUM(si.quantity * si.unit_price) AS total_sales,
+        SUM((si.unit_price - p.cost_price) * si.quantity) AS profit
+      FROM sale_items si
+      JOIN products p ON si.product_id = p.id
       LEFT JOIN categories c ON p.category_id = c.id
-      JOIN sales sa ON s.sale_id = sa.id
-      WHERE sa.transaction_date BETWEEN $1 AND $2
+      JOIN sales sa ON si.sale_id = sa.id
+      WHERE sa.created_at BETWEEN $1 AND $2
       GROUP BY p.sku, p.name, c.name
-    `;
-    const result = await pool.query(query, [startDate, endDate]);
+      ORDER BY total_sales DESC
+    `, [startDate, endDate]);
+
     res.json(result.rows);
-  } catch (err: any) {
-    res.status(500).json({ error: 'Failed to fetch SKU sales', message: err.message });
+  } catch (err) {
+    console.error('sales-sku error:', err);
+    res.status(500).json({ error: 'Failed to fetch sales SKU report' });
   }
 };
 
+
+
 export const getSalesPerCategory = async (req: Request, res: Response) => {
-  const { startDate, endDate } = parseParams(req);
+  const { startDate, endDate } = req.query;
+
   try {
-    const query = `
-      SELECT c.id as category_id, c.name as category_name,
-             COUNT(DISTINCT p.id) as product_count,
-             SUM(s.qty) as quantity_sold,
-             SUM(s.qty * s.price) as total_sales,
-             ROUND(AVG(s.price), 0) as average_price
-      FROM sales_items s
-      JOIN products p ON s.product_id = p.id
-      LEFT JOIN categories c ON p.category_id = c.id
-      JOIN sales sa ON s.sale_id = sa.id
-      WHERE sa.transaction_date BETWEEN $1 AND $2
+    const result = await pool.query(`
+      SELECT 
+        c.id AS category_id,
+        c.name AS category_name,
+        COUNT(DISTINCT p.id) AS product_count,
+        SUM(si.quantity) AS quantity_sold,
+        SUM(si.quantity * si.unit_price) AS total_sales,
+        AVG(si.unit_price) AS average_price
+      FROM sale_items si
+      JOIN products p ON si.product_id = p.id
+      JOIN categories c ON p.category_id = c.id
+      JOIN sales s ON si.sale_id = s.id
+      WHERE sa.created_at BETWEEN $1 AND $2
       GROUP BY c.id, c.name
-    `;
-    const result = await pool.query(query, [startDate, endDate]);
+      ORDER BY total_sales DESC
+    `, [startDate, endDate]);
+
     res.json(result.rows);
-  } catch (err: any) {
-    res.status(500).json({ error: 'Failed to fetch category sales', message: err.message });
+  } catch (err) {
+    console.error('sales-category error:', err);
+    res.status(500).json({ error: 'Failed to fetch sales category report' });
   }
 };
 
 export const getSalesPerSupplier = async (req: Request, res: Response) => {
-  const { startDate, endDate } = parseParams(req);
+  const { startDate, endDate } = req.query;
+
   try {
-    const query = `
-      SELECT sup.id as supplier_id, sup.name as supplier_name,
-             COUNT(DISTINCT p.id) as product_count,
-             SUM(s.qty) as quantity_sold,
-             SUM(s.qty * s.price) as total_sales,
-             SUM((s.price - p.cost_price) * s.qty) as profit
-      FROM sales_items s
-      JOIN products p ON s.product_id = p.id
-      LEFT JOIN suppliers sup ON p.supplier_id = sup.id
-      JOIN sales sa ON s.sale_id = sa.id
-      WHERE sa.transaction_date BETWEEN $1 AND $2
-      GROUP BY sup.id, sup.name
-    `;
-    const result = await pool.query(query, [startDate, endDate]);
+    const result = await pool.query(`
+      SELECT 
+        s.id AS supplier_id,
+        s.name AS supplier_name,
+        COUNT(DISTINCT p.id) AS product_count,
+        SUM(si.quantity) AS quantity_sold,
+        SUM(si.quantity * si.unit_price) AS total_sales,
+        SUM((si.unit_price - p.cost_price) * si.quantity) AS profit
+      FROM sales_items si
+      JOIN products p ON si.product_id = p.id
+      JOIN suppliers s ON p.supplier_id = s.id
+      JOIN sales sa ON si.sale_id = sa.id
+      WHERE sa.created_at BETWEEN $1 AND $2
+      GROUP BY s.id, s.name
+      ORDER BY total_sales DESC
+    `, [startDate, endDate]);
+
     res.json(result.rows);
-  } catch (err: any) {
-    res.status(500).json({ error: 'Failed to fetch supplier sales', message: err.message });
+  } catch (err) {
+    console.error('sales-supplier error:', err);
+    res.status(500).json({ error: 'Failed to fetch sales per supplier' });
   }
 };
 
 export const getConsignmentReport = async (req: Request, res: Response) => {
-  const { startDate, endDate } = parseParams(req);
+  const { startDate, endDate } = req.query;
+
   try {
-    const query = `
-      SELECT cs.id as consignment_id, sup.name as supplier_name, p.name as product_name,
-             cs.quantity as quantity_consigned,
-             COALESCE(SUM(s.qty), 0) as quantity_sold,
-             cs.commission_rate,
-             COALESCE(SUM(s.qty * s.price * (cs.commission_rate / 100)), 0) as total_commission
-      FROM consignments cs
-      JOIN products p ON cs.product_id = p.id
-      JOIN suppliers sup ON p.supplier_id = sup.id
-      LEFT JOIN sales_items s ON s.product_id = p.id
-      LEFT JOIN sales sa ON s.sale_id = sa.id AND sa.transaction_date BETWEEN $1 AND $2
-      GROUP BY cs.id, sup.name, p.name, cs.quantity, cs.commission_rate
-    `;
-    const result = await pool.query(query, [startDate, endDate]);
+    const result = await pool.query(`
+      SELECT 
+        con.id AS consignment_id,
+        s.name AS supplier_name,
+        p.name AS product_name,
+        con.quantity_consigned,
+        SUM(si.quantity) AS quantity_sold,
+        con.commission_rate,
+        SUM(si.quantity * si.unit_price) * (con.commission_rate / 100) AS total_commission
+      FROM consignments con
+      JOIN products p ON con.product_id = p.id
+      JOIN suppliers s ON con.supplier_id = s.id
+      LEFT JOIN sale_items si ON si.product_id = p.id
+      LEFT JOIN sales sa ON si.sale_id = sa.id AND sa.created_at BETWEEN $1 AND $2
+      GROUP BY con.id, s.name, p.name, con.quantity_consigned, con.commission_rate
+    `, [startDate, endDate]);
+
     res.json(result.rows);
-  } catch (err: any) {
-    res.status(500).json({ error: 'Failed to fetch consignment report', message: err.message });
+  } catch (err) {
+    console.error('consignment error:', err);
+    res.status(500).json({ error: 'Failed to fetch consignment report' });
   }
 };
 
 export const getPurchaseReport = async (req: Request, res: Response) => {
-  const { startDate, endDate } = parseParams(req);
+  const { startDate, endDate } = req.query;
+
   try {
-    const query = `
-      SELECT p.id as purchase_id, p.purchase_number, p.order_date, p.status,
-             s.name as supplier_name,
-             COUNT(pi.id) as total_items,
-             SUM(pi.quantity * pi.unit_cost) as total_amount
+    const result = await pool.query(`
+      SELECT 
+        p.id AS purchase_id,
+        s.name AS supplier_name,
+        p.purchase_number,
+        p.order_date,
+        COUNT(pi.id) AS total_items,
+        SUM(pi.quantity * pi.unit_price) AS total_amount,
+        p.status
       FROM purchases p
       JOIN suppliers s ON p.supplier_id = s.id
-      JOIN purchase_items pi ON pi.purchase_id = p.id
+      LEFT JOIN purchase_items pi ON pi.purchase_id = p.id
       WHERE p.order_date BETWEEN $1 AND $2
       GROUP BY p.id, s.name
-    `;
-    const result = await pool.query(query, [startDate, endDate]);
+      ORDER BY p.order_date DESC
+    `, [startDate, endDate]);
+
     res.json(result.rows);
-  } catch (err: any) {
-    res.status(500).json({ error: 'Failed to fetch purchase report', message: err.message });
+  } catch (err) {
+    console.error('purchase report error:', err);
+    res.status(500).json({ error: 'Failed to fetch purchase report' });
   }
 };
