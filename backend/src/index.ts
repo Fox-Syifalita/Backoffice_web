@@ -15,7 +15,7 @@ import supplierRoutes from './routes/supplier.routes';
 import reportRoutes from './routes/report.routes';
 import employeeRoutes from './routes/employee.routes';
 import settingRoutes from './routes/setting.routes';
-
+import customerRoutes from './routes/customer.routes';
 
 
 // Muat variabel lingkungan dari file .env
@@ -60,6 +60,7 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/employee', employeeRoutes);
 app.use('/api/setting', settingRoutes);
+app.use('/api/customers', customerRoutes);
 
 // 404 fallback - PINDAHKAN KE BAWAH SETELAH SEMUA ROUTES
 app.use((req, res) => {

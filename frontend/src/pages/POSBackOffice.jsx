@@ -8,7 +8,6 @@ import Supplier from './Supplier';
 import Reports from './Reports';
 import { mockAuth, mockProducts, mockCategories, mockSales, dashboardStats } from '../data/mock';
 import Employees from './Employee';
-import Products from './Products';
 import Settings from './Setting';
 
 const POSBackOffice = ({user, onLogout}) => {
@@ -26,11 +25,8 @@ const POSBackOffice = ({user, onLogout}) => {
             lowStock={mockProducts.filter(p => p.stock < 20)}
           />
         );
-      case 'products':
-        return <Products />;
-      case 'stockMovement':
-      case 'stockOpname':
-      case 'barcode':
+      case 'inventory':
+        return <InventoryLayout />;
       case 'purchases' :
         return <Purchases />;
       case 'sales' :
