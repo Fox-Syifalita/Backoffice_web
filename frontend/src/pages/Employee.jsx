@@ -76,7 +76,7 @@ const Employees = () => {
         payload.password = form.password;
       }
 
-      const url = editingEmployee ? `/api/users/${editingEmployee.id}` : '/api/users';
+      const url = editingEmployee ? `/api/employee/${editingEmployee.id}` : '/api/employee';
       const method = editingEmployee ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -137,7 +137,7 @@ const Employees = () => {
     }
 
     try {
-      const res = await fetch(`/api/users/${employee.id}`, {
+      const res = await fetch(`/api/employee/${employee.id}`, {
         method: 'DELETE'
       });
 

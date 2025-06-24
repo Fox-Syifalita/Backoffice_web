@@ -1,11 +1,11 @@
-import express from 'express';
+import { Router } from 'express';
 import { 
   getStockMovements, 
   getStockMovementSummary, 
   getStockMovementByProduct 
 } from '../controllers/stockMovement.controller';
 
-const router = express.Router();
+const router = Router();
 
 router.get('/', getStockMovements);
 router.get('/summary', getStockMovementSummary);

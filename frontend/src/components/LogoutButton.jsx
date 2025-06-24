@@ -1,19 +1,16 @@
 import React from "react";
+import { LogOut } from "lucide-react";
 
-const LogoutButton = ({ onLogout }) => {
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        onLogout();
-    };
-
-    return (
-        <button
-            onClick={handleLogout}
-            className="flex items-center text-red-600 px-4 py-2 hover:bg-red-100 rounded"
-        >
-            Logout
-        </button>
-    );
+const LogoutButton = ({ onLogout, isSidebarOpen }) => {
+  return (
+    <button
+      onClick={onLogout}
+      className="flex items-center w-full text-left text-red-400 hover:text-red-300"
+    >
+      <LogOut size={20} />
+      {isSidebarOpen && <span className="ml-4 whitespace-nowrap">Logout</span>}
+    </button>
+  );
 };
 
 export default LogoutButton;

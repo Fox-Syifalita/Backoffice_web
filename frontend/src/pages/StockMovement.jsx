@@ -26,7 +26,7 @@ const StockMovement = () => {
     setError('');
     
     try {
-      let url = '/api/stock-movements?';
+      let url = '/api/stockmovement';
       const params = new URLSearchParams();
 
       // Add filters based on selected period
@@ -59,7 +59,7 @@ const StockMovement = () => {
           break;
       }
 
-      const response = await fetch(`${url}${params.toString()}`);
+      const response = await fetch(`${url}?${params.toString()}`);
       if (!response.ok) {
         throw new Error('Gagal mengambil data stock movement');
       }

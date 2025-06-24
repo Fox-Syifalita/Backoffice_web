@@ -9,6 +9,7 @@ import Reports from './Reports';
 import { mockAuth, mockProducts, mockCategories, mockSales, dashboardStats } from '../data/mock';
 import Employees from './Employee';
 import Settings from './Setting';
+import Customers from './Customer';
 
 const POSBackOffice = ({user, onLogout}) => {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -31,6 +32,8 @@ const POSBackOffice = ({user, onLogout}) => {
         return <Purchases />;
       case 'sales' :
         return <Sales />;
+      case 'customers' :
+        return <Customers />;
       case 'supplier' :
         return <Supplier />;
       case 'reports' :

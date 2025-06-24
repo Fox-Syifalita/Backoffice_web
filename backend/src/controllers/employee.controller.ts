@@ -19,7 +19,7 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const hash = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      `INSERT INTO users (id, username, email, password, first_name, last_name, role, is_active)
+      `INSERT INTO users (id, username, email, password_hash, first_name, last_name, role, is_active)
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7)
        RETURNING id, username, email, first_name, last_name, role, is_active`,
       [username, email, hash, first_name, last_name, role, is_active]
@@ -41,7 +41,7 @@ export const updateUser = async (req: Request, res: Response) => {
     if (password) {
       const hash = await bcrypt.hash(password, 10);
       query = `
-        UPDATE users SET username=$1, email=$2, password=$3, first_name=$4, last_name=$5, role=$6, is_active=$7, updated_at=NOW()
+        UPDATE users SET username=$1, email=$2, password_hash=$3, first_name=$4, last_name=$5, role=$6, is_active=$7, updated_at=NOW()
         WHERE id=$8 RETURNING id, username, email, first_name, last_name, role, is_active
       `;
       params = [username, email, hash, first_name, last_name, role, is_active, id];
