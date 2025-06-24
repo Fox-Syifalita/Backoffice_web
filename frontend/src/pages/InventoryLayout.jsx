@@ -3,6 +3,7 @@ import Products from './Products';
 import StockMovement from './StockMovement';
 import StockOpname from './StockOpname';
 import BarcodePrint from './BarcodePrint';
+import Categories from './Categories';
 
 const InventoryLayout = () => {
   const [tab, setTab] = useState('products');
@@ -11,6 +12,7 @@ const InventoryLayout = () => {
     { id: 'products', label: 'Produk' },
     { id: 'stock-movement', label: 'Pergerakan Stok' },
     { id: 'stock-opname', label: 'Stok Opname' },
+    { id: 'categories', label: 'Categories'},
     { id: 'barcode', label: 'Cetak Barcode' }
   ];
 
@@ -19,6 +21,7 @@ const InventoryLayout = () => {
       case 'products': return <Products />;
       case 'stock-movement': return <StockMovement />;
       case 'stock-opname': return <StockOpname />;
+      case 'categories' : return <Categories />;
       case 'barcode': return <BarcodePrint />;
       default: return <Products />;
     }

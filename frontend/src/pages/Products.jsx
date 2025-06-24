@@ -10,7 +10,7 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [form, setForm] = useState({ name: '', sku: '', category_id: '', price: '', cost: '', stock: '' });
+  const [form, setForm] = useState({ name: '', sku: '', barcode: '', category_id: '', price: '', cost: '', stock: '' });
 
   useEffect(() => {
     fetch('/api/products')
@@ -53,8 +53,7 @@ const Products = () => {
   const newProduct = await res.json();
   setProducts(prev => [...prev, newProduct]);
   setShowModal(false);
-  setForm({ name: '', sku: '', category_id: '', price: '', cost: '', stock: '' });
-  setShowForm(false);
+  setForm({ name: '', sku: '', barcode: '', category_id: '', price: '', cost: '', stock: '' });
 }catch (err) {
   console.error('Error: ', err);
   alert('Terjadi kesalahan saat menyimpan produk')
@@ -65,6 +64,9 @@ const Products = () => {
   const filtered = products.filter(p =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const formatRupiah = (value) =>
+  typeof value === 'number' ? value.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }) : 'Rp 0';
 
   return (
     <div>
@@ -84,8 +86,8 @@ const Products = () => {
             sku: p.sku,
             category: p.category,
             stock: p.stock,
-            price: p.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }),
-            cost: p.cost.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+            price: formatRupiah(p.price),
+            cost: formatRupiah(p.cost)
           }))}
           actions={[
             { icon: Eye, label: 'View', onClick: (row) => console.log('View', row) },
@@ -106,6 +108,10 @@ const Products = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
               <input name="sku" value={form.sku} onChange={handleChange} required className="w-full px-3 py- 2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Barcode</label>
+              <input name="barcode" value={form.barcode} onChange={handleChange} required className="w-full px-3 py- 2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
@@ -133,6 +139,21 @@ const Products = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Stok</label>
             <input type="number" name="stock" value={form.stock} onChange={handleChange} required className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
           </div>
+          <div className="flex justify-end space-x-2 pt-4">
+          <button
+            type="button"
+            onClick={() => setShowModal(false)}
+            className="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Save
+          </button>
+        </div>
         </form>
       </Modal>
     </div>

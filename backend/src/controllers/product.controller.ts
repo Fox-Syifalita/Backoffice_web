@@ -37,7 +37,7 @@ try {
       [
         name,
         sku,
-        barcode,
+        barcode?.trim() || null,
         description,
         category_id,
         supplier_id,
