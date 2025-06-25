@@ -32,6 +32,7 @@ const Products = () => {
   const payload = {
     name: form.name,
     sku: form.sku,
+    barcode: form.barcode,
     category_id: form.category_id,
     cost_price: parseFloat(form.cost),
     selling_price: parseFloat(form.price),
@@ -79,11 +80,12 @@ const Products = () => {
 
       <div className="px-6">
         <Table
-          headers={['Name', 'SKU', 'Category', 'Stock', 'Price', 'Cost']}
+          headers={['Name', 'SKU', 'Barcode', 'Category', 'Stock', 'Price', 'Cost']}
           data={filtered.map(p => ({
             id: p.id,
             name: p.name,
             sku: p.sku,
+            barcode: p.barcode,
             category: p.category,
             stock: p.stock,
             price: formatRupiah(p.price),

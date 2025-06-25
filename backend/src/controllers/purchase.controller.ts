@@ -4,10 +4,18 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const getAllPurchases = async (_req: Request, res: Response) => {
   try {
-    const result = await pool.query(`SELECT * FROM purchases ORDER BY created_at DESC`);
+    const result = await pool.query(`
+      SELECT 
+        p.id, p.purchase_number, p.order_date, p.status, 
+        p.total_amount, s.name AS supplier_name
+      FROM purchases p
+      LEFT JOIN suppliers s ON p.supplier_id = s.id
+      ORDER BY p.order_date DESC
+    `);
     res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch purchases' });
+  } catch (err: any) {
+    console.error('[getAllPurchases] Error:', err);
+    res.status(500).json({ error: 'Failed to get purchases' });
   }
 };
 
@@ -39,14 +47,25 @@ export const createPurchase = async (req: Request, res: Response) => {
     );
 
     for (const item of items) {
+      const quantity = Number(item.quantity_ordered);
+      const unitCost = Number(item.unit_cost);
+      const totalCost = quantity * unitCost;
+
+      if (isNaN(totalCost)) throw new Error('Invalid quantity or unit cost');
+
       await client.query(
         `INSERT INTO purchase_items (
-          id, purchase_id, product_id, quantity_ordered, unit_cost
-        ) VALUES ($1,$2,$3,$4,$5)`,
-        [uuidv4(), purchaseId, item.product_id, item.quantity_ordered, item.unit_cost]
-      );
-
-      // Optionally update stock here if status === 'received'
+        id, purchase_id, product_id, quantity_ordered, unit_cost, total_cost
+        ) VALUES ($1, $2, $3, $4, $5, $6)`,
+      [uuidv4(), purchaseId, item.product_id, quantity, unitCost, totalCost]
+    );
+  
+   if (status === 'received') {
+        await client.query(
+          `UPDATE products SET stock = stock + $1 WHERE id = $2`,
+          [quantity, item.product_id]
+        );
+      }
     }
 
     await client.query('COMMIT');
@@ -67,12 +86,17 @@ export const updatePurchaseStatus = async (req: Request, res: Response) => {
 
   try {
     const result = await pool.query(
-      `UPDATE purchases SET status = $1 WHERE id = $2 RETURNING *`,
+      `UPDATE purchases SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *`,
       [status, id]
     );
-    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to update status' });
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Purchase not found' });
+    }
+
+    res.json({ message: 'Status updated', data: result.rows[0] });
+  } catch (err: any) {
+    console.error('[updatePurchaseStatus] Error:', err);
+    res.status(500).json({ error: 'Failed to update status', message: err.message });
   }
 };

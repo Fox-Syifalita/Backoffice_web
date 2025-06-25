@@ -16,14 +16,14 @@ const BarcodePrint = () => {
 
   const filtered = products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.sku.toLowerCase().includes(search.toLowerCase())
+    p.barcode.toLowerCase().includes(search.toLowerCase())
   );
 
   useEffect(() => {
     filtered.forEach(p => {
       const canvas = document.getElementById(`barcode-${p.id}`);
       if (canvas) {
-        JsBarcode(canvas, p.sku, {
+        JsBarcode(canvas, p.barcode, {
           format: "CODE128",
           width: 2,
           height: 40,

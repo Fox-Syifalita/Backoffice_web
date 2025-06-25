@@ -16,6 +16,7 @@ import reportRoutes from './routes/report.routes';
 import employeeRoutes from './routes/employee.routes';
 import settingRoutes from './routes/setting.routes';
 import customerRoutes from './routes/customer.routes';
+import opnameRoutes from './routes/opname.routes';
 
 
 // Muat variabel lingkungan dari file .env
@@ -53,6 +54,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/stockmovement', stockMovementRoutes);
+app.use('/api/opname', opnameRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/purchase-returns', purchaseReturnRoutes);
 app.use('/api/sales', salesRoutes);
