@@ -22,16 +22,23 @@ const BarcodePrint = () => {
   useEffect(() => {
     filtered.forEach(p => {
       const canvas = document.getElementById(`barcode-${p.id}`);
-      if (canvas) {
-        JsBarcode(canvas, p.barcode, {
-          format: "CODE128",
-          width: 2,
-          height: 40,
-          displayValue: true
-        });
-      }
-    });
-  }, [filtered]);
+      if (canvas && p.barcode && p.barcode.trim() !== '') {
+      JsBarcode(canvas, p.barcode, {
+        format: "CODE128",
+        width: 2,
+        height: 40,
+        displayValue: true
+      });
+    } else if (canvas) {
+      // Kosongkan canvas atau beri tanda bahwa barcode tidak valid
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = "12px sans-serif";
+      ctx.fillStyle = "red";
+      ctx.fillText("Barcode kosong", 10, 20);
+    }
+  });
+}, [filtered]);
 
   return (
     <div>
