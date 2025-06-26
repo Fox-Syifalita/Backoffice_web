@@ -11,6 +11,8 @@ const Products = () => {
   const [showModal, setShowModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({ name: '', sku: '', barcode: '', category_id: '', price: '', cost: '', stock: '' });
+  const [editId, setEditId] = useState(null);
+
 
   useEffect(() => {
     fetch('/api/products')
@@ -41,26 +43,77 @@ const Products = () => {
     track_stock: true,
     allow_negative_stock: false,
     unit: 'pcs',
-    tax_rate: 0,
-    barcode: '',          
+    tax_rate: 0,          
   };
 
-  const res = await fetch('/api/products', {
+  const res = await fetch(`/api/products${editId ? `/${editId}` : ''}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   });
+  
+  if (!res.ok) throw new Error('Gagal menyimpan produk');
+    const data = await res.json();
 
-  const newProduct = await res.json();
-  setProducts(prev => [...prev, newProduct]);
-  setShowModal(false);
-  setForm({ name: '', sku: '', barcode: '', category_id: '', price: '', cost: '', stock: '' });
-}catch (err) {
-  console.error('Error: ', err);
-  alert('Terjadi kesalahan saat menyimpan produk')
-}
+    if (editId) {
+      setProducts((prev) => prev.map(p => (p.id === editId ? data : p)));
+    } else {
+      setProducts((prev) => [...prev, data]);
+    }
+
+    setEditId(null);
+    setShowModal(false);
+    setForm({ name: '', sku: '', barcode: '', category_id: '', price: '', cost: '', stock: '' });
+  } catch (err) {
+    console.error('Error: ', err);
+    alert('Terjadi kesalahan saat menyimpan produk');
+  }
 };
 
+const handleView = (product) => {
+  alert(`Nama: ${product.name}
+SKU: ${product.sku}
+Barcode: ${product.barcode}
+Modal: ${formatRupiah(product.cost_price)}
+Harga Jual: ${formatRupiah(product.selling_price)}`);
+};
+
+const handleEdit = (product) => {
+  setForm({
+    name: product.name,
+    sku: product.sku,
+    barcode: product.barcode || '',
+    category_id: product.category_id,
+    price: product.selling_price,
+    cost: product.cost_price,
+    stock: product.stock_quantity
+  });
+  setEditId(product.id);
+  setShowModal(true);
+};
+
+const handleDelete = async (product) => {
+  const confirmDelete = confirm(`Hapus produk ${product.name}?`);
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(`/api/products/${product.id}`, {
+      method: 'DELETE'
+    });
+    if (!res.ok) throw new Error('Gagal menghapus produk');
+
+    setProducts(prev => prev.filter(p => p.id !== product.id));
+    alert('Produk berhasil dihapus');
+  } catch (err) {
+    console.error('Gagal hapus:', err);
+    alert('Gagal menghapus produk');
+  }
+};
+
+const getCategoryName = (categoryId) => {
+  const found = categories.find((cat) => cat.id === categoryId);
+  return found ? found.name : 'Tidak diketahui';
+}
 
   const filtered = products.filter(p =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -81,20 +134,21 @@ const Products = () => {
       <div className="px-6">
         <Table
           headers={['Name', 'SKU', 'Barcode', 'Category', 'Stock', 'Price', 'Cost']}
-          data={filtered.map(p => ({
+          data={products.map(p => ({
             id: p.id,
             name: p.name,
             sku: p.sku,
             barcode: p.barcode,
-            category: p.category,
-            stock: p.stock,
-            price: formatRupiah(p.price),
-            cost: formatRupiah(p.cost)
+            category: getCategoryName(p.category_id),
+            stock: p.stock_quantity,
+            price: formatRupiah(Number(p.selling_price)),
+            cost: formatRupiah(Number(p.cost_price)),
+            _raw: p
           }))}
           actions={[
-            { icon: Eye, label: 'View', onClick: (row) => console.log('View', row) },
-            { icon: Edit, label: 'Edit', onClick: (row) => console.log('Edit', row) },
-            { icon: Trash2, label: 'Delete', onClick: (row) => console.log('Delete', row), color: 'text-red-600' }
+            { icon: Eye, label: 'View', onClick: handleView },
+            { icon: Edit, label: 'Edit', onClick: handleEdit},
+            { icon: Trash2, label: 'Delete', onClick: handleDelete, color: 'text-red-600' }
           ]}
         />
       </div>

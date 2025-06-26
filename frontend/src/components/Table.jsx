@@ -1,8 +1,6 @@
 import React from 'react';
 
 const Table = ({ headers, data, actions }) => {
-  // Buat array kunci (keys) dari header untuk memilih data mana yang akan ditampilkan.
-  // Ini akan mengubah ['Name', 'Username'] menjadi ['name', 'username']
   const dataKeys = headers.map(header => header.toLowerCase().replace(' ', '_'));
 
   return (
@@ -23,8 +21,6 @@ const Table = ({ headers, data, actions }) => {
         <tbody className="bg-white divide-y divide-gray-200">
           {data.map((item, rowIndex) => (
             <tr key={item.id || rowIndex} className="hover:bg-gray-50">
-              {/* DIUBAH: Sekarang kita hanya merender data sesuai kunci yang ada di `dataKeys`. */}
-              {/* Properti `id` dan `_raw` akan otomatis diabaikan. */}
               {dataKeys.map((key, cellIndex) => (
                 <td key={cellIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {item[key]}
@@ -39,7 +35,6 @@ const Table = ({ headers, data, actions }) => {
                       return (
                         <button
                           key={actionIndex}
-                          // DIUBAH: Mengirim `item._raw` ke fungsi onClick agar mendapatkan data asli.
                           onClick={() => action.onClick(item._raw)}
                           className={`p-1 rounded hover:bg-gray-100 ${action.color || 'text-gray-600'}`}
                           title={action.label}

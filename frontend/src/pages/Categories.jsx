@@ -184,7 +184,9 @@ const Categories = () => {
             status: cat.is_active ? 
               <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Active</span> :
               <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">Inactive</span>,
-            created_at: new Date(cat.created_at).toLocaleDateString('id-ID')
+            created_at: cat.created_at 
+              ? new Date(cat.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) 
+              : '-'
           }))}
           actions={[
             { 

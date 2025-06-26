@@ -11,7 +11,7 @@ export const getStockMovements = async (req: Request, res: Response) => {
         sm.id,
         sm.product_id,
         sm.movement_type,
-        sm.quantity,
+        sm.quantity_change AS quantity,
         sm.movement_date,
         sm.notes,
         sm.user_id,
@@ -102,7 +102,6 @@ export const getStockMovementSummary = async (req: Request, res: Response) => {
         p.sku,
         c.name AS category,
         s.name AS supplier_name,
-        -- Opening stock (assuming we have a starting inventory)
         COALESCE(
           (SELECT SUM(quantity) 
            FROM stock_movements sm_opening 

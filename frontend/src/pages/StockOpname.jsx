@@ -77,7 +77,8 @@ const StockOpname = () => {
         opname_number: form.opname_number || generateOpnameNumber(),
         description: form.description,
         status: 'draft',
-        opname_date: new Date().toISOString().split('T')[0]
+        opname_date: new Date().toISOString().split('T')[0],
+        items: opnameItems
       };
 
       const method = editMode ? 'PUT' : 'POST';
@@ -332,11 +333,74 @@ const StockOpname = () => {
               name="description" 
               value={form.description} 
               onChange={handleChange}
+              
               rows="3"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" 
               placeholder="Deskripsi stock opname..."
+              
             />
           </div>
+          {products.length > 0 && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Daftar Produk (input stok fisik)
+            </label>
+            <div className="space-y-2 max-h-64 overflow-y-auto border p-2 rounded-md">
+              {products.map(product => {
+                const existing = opnameItems.find(item => item.product_id === product.id);
+                const physical_count = existing?.physical_count || '';
+                const system_count = product.stock || 0;
+                const variance = physical_count !== '' ? physical_count - system_count : 0;
+
+                return (
+                  <div key={product.id} className="flex items-center justify-between space-x-2 bg-gray-50 p-2 rounded">
+                    <div className="w-1/3">
+                      <p className="text-sm font-medium">{product.name}</p>
+                      <p className="text-xs text-gray-500">{product.sku}</p>
+                    </div>
+                    <div className="w-1/6 text-sm">{system_count}</div>
+                    <input
+                      type="number"
+                      min="0"
+                      className="w-1/6 px-2 py-1 border rounded text-sm"
+                      value={physical_count}
+                      onChange={(e) => {
+                        const updated = [...opnameItems];
+                        const idx = updated.findIndex(i => i.product_id === product.id);
+                        const count = parseInt(e.target.value);
+                        if (idx >= 0) {
+                          updated[idx] = {
+                            ...updated[idx],
+                            physical_count: count,
+                            system_count,
+                            variance: count - system_count,
+                            status: count === system_count ? 'match' : 'variance'
+                          };
+                        } else {
+                          updated.push({
+                            id: product.id,
+                            product_id: product.id,
+                            product_name: product.name,
+                            product_sku: product.sku,
+                            physical_count: count,
+                            system_count,
+                            variance: count - system_count,
+                            status: count === system_count ? 'match' : 'variance'
+                          });
+                        }
+                        setOpnameItems(updated);
+                      }}
+                      placeholder="Stok fisik"
+                    />
+                    <div className="w-1/6 text-sm text-center font-medium">
+                      {physical_count !== '' ? (variance > 0 ? '+' : '') + variance : '-'}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
           <div className="flex justify-end space-x-2 pt-4">
             <button

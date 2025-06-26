@@ -1,6 +1,14 @@
 import { Request, Response } from 'express';
 import { pool } from '../db';
 
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query('SELECT * FROM products ORDER BY id');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
+};
 export const createProduct = async (req: Request, res: Response) => {
   const {
     name,
@@ -58,15 +66,6 @@ try {
   } catch (err) {
     console.error('Product creation error:', err);
     res.status(500).json({ error: 'Failed to create product' });
-  }
-};
-
-export const getAllProducts = async (req: Request, res: Response) => {
-  try {
-    const result = await pool.query('SELECT * FROM products ORDER BY id');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch products' });
   }
 };
 
